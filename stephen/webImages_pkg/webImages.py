@@ -45,17 +45,13 @@ class webImages():
 	return url_text	
     def parse_file(self):
         '''Parses an HTML file to find images.'''
-        regex='''src=".*"\>'''
+        regex='''\<img[^\>]*src="http://[^\"]*"''' #referenced regex cheatsheet at http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
         results = re.findall(regex, self.HTML)
-        regex2 = '''"\<http:/...*"'''
         tmp=[]
-        for line in results:
-            tmp.append(re.findall(regex2,line))
-        for i in range(0, len(results)):
-            results[i] = results[i].lstrip("img src")
         for result in results:
-            print '\n'
-            print result 
+            result = re.findall('''http://[^\"]*''',result)
+            tmp.append(result[0])
+        results = tmp
     def download_images(self):
         pass
 
