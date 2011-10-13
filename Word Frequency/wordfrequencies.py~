@@ -1,0 +1,161 @@
+__author__ = "Stephen"
+__version__ = 0.1
+
+
+#wordfrequencies.py
+
+#####################################
+## Stephen Wilson                  ##
+## 10/05/11                        ##
+## Application Design              ##
+## Word Frequencies                ##
+#####################################
+
+
+#Import the sys library for the command line arguments
+import sys
+import string
+
+def get_file ():
+    ''' This function gets the data from a file and returns a string with the entire text. It takes a command line argument as the file name.'''
+    if len(sys.argv)>1:
+        filename = sys.argv[1]
+    else:
+        filename = raw_input("Filename (default has .txt extension): ")
+    try:
+            f = open(filename, "r")
+    except IOError: # Deals with exceptions, such as if the file doesn't exist
+            raise ValueError, 'Sorry, that filename does not exist. please reboot the program'
+    all_text= f.read() # All the text in the file is read out to the file to a variable
+    return all_text
+           
+def get_occur(all_text):
+    '''This function seperates out words according to blank space and returns a dictionary with all the words and the frequencies.'''
+    occurances={}   
+    all_text = all_text.split()
+    for word in all_text:
+        if word in occurances:
+            occurances[word]+= 1
+        else:
+            occurances[word] = 1
+    return occurances
+
+def sort_occur(occurances):
+    '''This dunction will change the dictionary into a list and sort the list alphabetically or by number of occurances.'''
+    sort_type = raw_input("\nIf you want to sort alphabetically, enter a.\nIf you want to sort by number of occurances, enter o:\n")
+    sort_ls = []
+    temp =[]
+    if sort_type == 'a':
+        for word, number in occurances.items():
+            temp= [word, number]
+            sort_ls.append(temp)
+    elif sort_type == 'o':
+        for word, number in occurances.items():
+            temp= [number, word]
+            sort_ls.append(temp)
+    else:
+        raise ValueError
+    sort_ls.sort()
+    return sort_ls
+
+def partition(sort_ls):
+    '''This function removes a non-alphabet character from any word through partition and returns the new list.'''
+    i=0
+    for pair in sort_ls:
+        for nonalpha in nonalph: # calls the list of non-alpha characters to remove
+            if type(pair[0]) == int: # option o
+                tmp=pair[1].partition(nonalpha)
+                if tmp[2] != '':
+                    tmp_ls = [pair[0],tmp[2]]
+                    sort_ls[i] = tmp_ls
+                if tmp[0] != '' and tmp[2] != '':
+                    tmp_ls = [pair[0],tmp[0]]
+                    sort_ls.insert(0, tmp_ls)
+            else: #option a
+                tmp=pair[0].partition(nonalpha)
+                if tmp[2] != '':
+                    tmp_ls = [pair[1],tmp[2]]
+                    sort_ls[i] = tmp_ls
+                if tmp[0] != '' and tmp[2] != '':
+                    tmp_ls = [pair[1],tmp[0]]
+                    sort_ls.insert(0, tmp_ls)
+        i+=1
+    sort_ls.sort()
+    return sort_ls
+
+def clean_up(sort_ls):
+    ''' Consolidates repetitve occurances.'''
+    i=0
+    for pair in sort_ls:
+        tmp = sort_ls[i-1]
+        if type(pair[0]) == int: # option o
+            if pair[1] == tmp[1]:
+                pair[0] += tmp[0]
+                sort_ls[i-1] = pair
+                del sort_ls[i]
+        else: #option a
+            if pair[0] == tmp[0]:
+                pair[1] += tmp[1]
+                sort_ls[i-1] = pair
+                del sort_ls[i]
+        i+=1
+    return sort_ls
+
+def rm_nonalpha(ls):
+    '''This function calls functions to remove nonalpha characters'''
+    i=0
+    while ls:
+        partition(ls)
+        i+=1
+        ls = clean_up(ls)
+    return (ls)
+
+def display_occur(sort_ls):
+    '''Displays the contents of the list if desired.'''
+    cont = True
+    while cont == True:
+        prompt = raw_input("Do you want to print the results to the display? (y or n)")
+        if prompt=='y':
+            cont = False
+            print 'The word frequencies from the file  are as follows:' 
+            for tupl in sort_ls:
+                print tupl
+        elif prompt=='n':
+            cont = False
+        elif prompt=='q':
+            cont = False
+        else: # Handles any other input
+            print 'Error in input: enter y or n only please!\n'
+
+
+def write_file (sort_ls):
+    '''Opens a file and writes the word frequencies to it, if desired.'''
+    cont = True
+    while cont == True:
+        prompt = raw_input("Save the word frequencies? (y or n): ")
+        if prompt=='y':
+            cont = False
+            print 'Saving numbers and stats to wordfreq.dat\n'
+            f = open("wordfreq.dat","w")
+            for tupl in sort_ls:
+                f.write(str(tupl)+ '\n')
+            f.close()
+        elif prompt=='n':
+            cont = False
+        elif prompt=='q':
+            cont = False
+        else: # Handles any other input
+            print 'Error in input: enter y or n only please!\n'
+
+def main():
+    '''Calls all functions to calculate word frequencies.'''
+    text = get_file()
+    stats = get_occur(text)
+    stats = sort_occur(stats)
+    stats = rm_nonalpha(stats)
+    display_occur(stats)
+    write_file (stats)
+
+#Allows access to main if the script is being run by itself
+if __name__ == "__main__":
+    main()

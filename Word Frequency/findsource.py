@@ -1,0 +1,6 @@
+import os
+import sys
+
+for root, dir, file in os.walk(sys.argv[1]):
+    print root
+    print dir

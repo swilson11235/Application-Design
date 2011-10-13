@@ -1,0 +1,130 @@
+'''This program can read and write a set of numbers from a text file to be analysed statistically. The numbers to be analysed need to be in the first line of the .dat file. 
+Numbers can be manually entered as well.'''
+__author__ = "Stephen"
+__version__ = 0.1
+
+
+#UpdatedStatisticalLibrary.py
+
+#####################################
+## Stephen Wilson                  ##
+## 10/04/11                        ##
+## Application Design              ##
+## Updated Statistical Calculator  ##
+#####################################
+
+
+
+#Import the math library for square root function
+import math
+
+def get_file (numbers):
+    ''' This function gets the data from a file and then returns the list from the file with the current user's name appended.'''
+    user = raw_input("\nWhat is your name?\n")
+    print "\n\nNOTE: Any numbers to be imported need to be in the first line of the .dat file. "
+    filename = raw_input("Filename (default is data.dat): ")
+    try:
+            f = open(filename, "r")
+    except IOError: # Deals with exceptions, such as if the file doesn't exist
+            raise ValueError, 'Sorry, that filename does not exist. please reboot the program'
+    raw_ls = f.readline() # The numbers are stored on the first line
+    numbers = (eval(raw_ls)) # Seperates the numbers in the string out into floats
+    numbers.insert(0,user)
+    print 'This is your number set that was imported: '
+    print numbers
+    prompt = raw_input('If you wish to add more numbers, enter y: ')
+    if prompt == 'y':
+            raw_ls = raw_input("Enter numbers one at a time seperated by spaces:")
+            raw_ls = raw_ls.split() #Splits the string into component strings
+            numbers += raw_ls #Adds these strings to num_ls
+    f.close()
+    return numbers
+            
+
+def get_num ():
+    '''This function allows for the importing of a data file (default is data.dat) or the manual entering of numbers for the calculator. 
+If getting numbers from a file, the user needs to have them in the first line of the text file, seperated by spaces and commas, and enclosed in square brackets.'''
+    numbers = []
+    switch = True
+    while switch: # Ensures there is proper input
+        prompt = raw_input("\nIf you want to get numbers for analysis from a file, enter f. \nIf you want to enter them manually, enter m. To exit the prompt enter q.\n")
+        if prompt == 'f':
+                numbers = get_file(numbers)
+                switch = False
+        elif prompt == 'm':
+                #Gets input from user, splits the string into sub-strings
+                raw_ls = raw_input("\nEnter your name and then at least five numbers seperated by spaces: ")
+                numbers = raw_ls.split()
+                switch = False
+        elif prompt == 'q':
+           	raise SystemExit
+        else: # Handles any other input
+            	print 'Error in input! Try again please.'
+    return numbers
+
+def convert_ls (ininum):
+    '''Takes input, converts it into floats, adds it to the output list, and sorts it.'''
+    finalnum = []
+    for token in ininum[1:]:
+            finalnum.append(float(token))
+    finalnum.sort()
+    return finalnum
+
+def get_stats (numbers):
+    '''Calculates MIN, MAX, AVG, and STDEV, and then appends them to the stats list.'''
+    stats = []
+    #Calculates Min and Max
+    st_min = numbers[0]
+    st_max = numbers[len(numbers)-1]
+    stats.append(st_min)
+    stats.append(st_max)
+    #Calculates AVG
+    st_avg = math.fsum(numbers) / len(numbers)
+    stats.append(st_avg)
+    #Calculates stdev, and then appends them to the list
+    vari =0 
+    for n in numbers:
+            vari += (n - st_avg) ** 2
+    st_stdev = math.sqrt(vari / len (numbers))
+    stats.append(st_stdev)
+    return stats
+
+def display_stats(numbers, stats):
+    ''' Prints out statistics with the current user's name. The user's name is the first item in the numbers list'''
+    print "\n\nHere are the statistics for {name}'s list:\n".format(name = numbers[0])
+    print 'Min is {0[0]}, Max is {0[1]}, Average is {0[2]}, and Standard deviation is {0[3]}\n'.format(stats)
+
+def write_file (numbers, stats):
+    '''Opens a file and writes the stats to it, if desired.'''
+    prompt = raw_input("Save the file? (y or n): ")
+    if prompt=='y':
+            print 'Saving numbers and stats to data.dat\n'
+            f = open("data.dat","w")
+            f.write(str(numbers))
+            f.write("\n")
+            f.write(str(stats))
+            f.close()
+    elif prompt=='n':
+            print "Quitting..."
+    else: # Handles any other input
+            f = open("temp.dat","w")
+            f.write(str(numbers))
+            f.write("\n")
+            f.write(str(stats))
+            f.close()
+            raise ValueError, 'Error in input! Saving in temp.dat...'
+
+def main():
+    '''Calls all functions to create a statistical calculator.'''
+    #A temporary storage that contains the numbers and the user's name
+    num_ls = get_num()
+    # Creates a new list for final output.
+    end_ls = convert_ls(num_ls)
+    # Declares a list to store statistics in
+    st_ls = get_stats(end_ls)
+    display_stats(num_ls, st_ls)
+    write_file (end_ls, st_ls)
+
+#Allows access to main if the script is being run by itself
+if __name__ == "__main__":
+    main()

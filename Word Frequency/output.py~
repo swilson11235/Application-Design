@@ -1,0 +1,10 @@
+def list_to_table(list):
+   start_str  = '<table>'
+   for item in list:
+       start_str += '<tr><td>' + str (item) +'</tr></td>'
+   start_str += '</table>'
+   return start_str
+
+def populate_template(template,vals):
+    return template%vals
+

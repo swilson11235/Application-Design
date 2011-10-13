@@ -1,0 +1,10 @@
+import sys
+
+filename = sys.argv[1]
+
+f = open(filename, 'r')
+my_byte=f.read(1)
+while my_file:
+    print my_byte
+    my_byte = my_file.read(1)
+    
