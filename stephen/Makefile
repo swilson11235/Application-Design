@@ -5,7 +5,7 @@ MODULE = $(BASE)_pkg
 
 program:
 	export PYTHONPATH=$(PYTHONPATH):./$(MODULE)
-	python $(PROGRAM).py "http://www.cnn.com"
+	python $(PROGRAM).py "http://wallbase.cc/random"
 
 test:
 	export PYTHONPATH=$(PYTHONPATH):./$(MODULE)

@@ -13,7 +13,9 @@ class test_webImages(unittest.TestCase):
         pass
     def test_parsefile(self):
         '''This function tests the parsing of html.'''
-        pass
+        HTML = '''<img width="119" height="82" usemap="#cnn_hdrimap" alt="CNN" src="http://i.cdn.turner.com/cnn/.element/img/3.0/main/blackout/hdr-main-bk.gif">'''
+        result=my_webImages.parse_file(HTML)
+        self.assertEqual(result,"i.cdn.turner.com/cnn/.element/img/3.0/main/blackout/hdr-main-bk.gif")
     def test_download_images(self):
         '''This function tests the downloading of images.'''
         pass
