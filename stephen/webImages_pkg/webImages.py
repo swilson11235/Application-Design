@@ -4,7 +4,7 @@ __author__ = 'Stephen'
 __version__ = '1.0'
 
 #import webImages
-import urllib2,re
+import urllib2,re,string
 
 class webImages():
     def __init__(self, url='http://www.nytimes.com'):
@@ -43,15 +43,26 @@ class webImages():
         url_file = urllib2.urlopen(self.URL)
 	url_text = url_file.read()
 	return url_text	
-    def parse_file(self):
-        '''Parses an HTML file to find images.'''
+    def parse_file(self, HTML='self.HTML'):
+        '''Parses HTML code to find images. By default, the code is the initialized file.'''
         regex='''\<img[^\>]*src="http://[^\"]*"''' #referenced regex cheatsheet at http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
-        results = re.findall(regex, self.HTML)
+        results = re.findall(regex,HTML)
         tmp=[]
         for result in results:
             result = re.findall('''http://[^\"]*''',result)
             tmp.append(result[0])
         results = tmp
+        tmp =[]
+        for i in range(0,len(results)):
+            if results[i][-4] != '.'and results[i][-5] != '.' or results[i][-1]== '?':
+                tmp.append(i)
+        tmp.sort(reverse=True)
+        for item in tmp:
+           del results[item]
+        self.links= results
+        return results
+
     def download_images(self):
         pass
+        
 
