@@ -11,7 +11,7 @@ class webImages():
     def __init__(self, url='http://www.nytimes.com'):
         '''Initializes a new webpage's images.'''
         self.URL=url
-        self.HTML=''
+        self.HTML=self.get_HTML()
     def __add__(self):
         ''''''
         pass
@@ -43,7 +43,6 @@ class webImages():
         '''Gets an HTML document from the URL. Is called by __init__.'''
         url_file = urllib2.urlopen(self.URL)
 	url_text = url_file.read()
-        self.HTML=url_text
 	return url_text	
     def parse_file(self, HTML=''):
         '''Parses HTML code to find images. By default, the code is the initialized file.'''
