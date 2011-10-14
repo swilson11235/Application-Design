@@ -12,33 +12,30 @@ class webImages():
         '''Initializes a new webpage's images.'''
         self.URL=url
         self.HTML=self.get_HTML()
-    def __add__(self):
-        ''''''
-        pass
+        self.links=[]
+    def __add__(self,link_list):
+        '''Adds two link lists together.'''
+        for i in range(0, len(link_list)):
+            self.links.append(link_list[i])
+        return self.links
     def __len__(self):
-        '''Returns the number of frames.'''
-        pass
-#        return len(self.frames)
+        '''Returns the number of images.'''
+        return len(self.links)
     def __str__(self):
-        '''Returns a string representation of the class (the frames, in other words data, are in a string).'''
-        pass
-#        return str(self.frames)
+        '''Returns a string representation of the class, specifically the links.'''
+        return str(self.links)
     def __getitem__(self,index):
         '''Defines the default getitem function.'''
-        pass
-        #return self.frames[index]
+        return self.links[index]
     def __setitem__(self, index, value):
         '''Defines the default setitem function.'''
-        pass
-#self.frames[index] = value
+        self.links[index] = value
     def append(self,value):
-        '''Appends a single value to the frames.'''
-        pass
-        #self.frames.append(value)
+        '''Appends a single link to the links.'''
+        self.links.append(value)
     def __getslice__(self,index1,index2):
         '''Defines the default getslice function.'''
-        pass
-        #return self.frames[index1:index2]
+        return self.links[index1:index2]
     def get_HTML(self):
         '''Gets an HTML document from the URL. Is called by __init__.'''
         url_file = urllib2.urlopen(self.URL)
