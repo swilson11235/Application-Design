@@ -1,0 +1,17 @@
+'''This class processes ''' 
+
+__author__ = 'Stephen'
+__version__ = '1.0'
+
+from webImages_pkg import webImages
+import sys
+
+
+
+def main():
+    nytimes = webImages(sys.argv[1])
+    nytimes.parse_file()
+    nytimes.download_images()
+
+if __name__=='__main__':
+    main()
