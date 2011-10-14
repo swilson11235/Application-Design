@@ -5,6 +5,7 @@ __version__ = '1.0'
 
 #import webImages
 import urllib2,re,string
+import os
 
 class webImages():
     def __init__(self, url='http://www.nytimes.com'):
@@ -43,9 +44,11 @@ class webImages():
         url_file = urllib2.urlopen(self.URL)
 	url_text = url_file.read()
 	return url_text	
-    def parse_file(self, HTML='self.HTML'):
+    def parse_file(self, HTML=''):
         '''Parses HTML code to find images. By default, the code is the initialized file.'''
         regex='''\<img[^\>]*src="http://[^\"]*"''' #referenced regex cheatsheet at http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
+        if HTML=='':
+            HTML=self.HTML
         results = re.findall(regex,HTML)
         tmp=[]
         for result in results:
@@ -62,7 +65,19 @@ class webImages():
         self.links= results
         return results
 
-    def download_images(self):
-        pass
-        
+    def download_images(self, path ='images'):
+        if not os.access(path, os.F_OK):
+            os.mkdir(path)
+        os.chdir(path)
+        i=0
+        for link in self.links:
+            urlish = urllib2.urlopen(link)
+            data = urlish.read()
+            fname = re.findall('''...\.(gif|jpg|jpeg|svg|tiff|png)''',link)
+            if fname==[]:
+                print 'This link does not have a supported file type: ' + link
+            else:
+                f = open(str(i)+'.'+fname[0], 'w')
+                f.write(data)
+            i+=1
 
