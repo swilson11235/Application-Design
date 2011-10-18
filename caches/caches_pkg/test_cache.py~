@@ -1,0 +1,26 @@
+'''This class tests the cache class.'''
+
+__author__ = 'Stephen'
+__version__ = '1.0'
+
+from caches import caches
+import unittest,os
+
+
+class test_caches(unittest.TestCase):
+    def set_up(self):
+        '''No set-up.'''
+        self.my_caches = caches()
+    def test_(self):
+        '''This function tests the .'''
+        pass
+    def test_(self):
+        '''This function tests the .'''
+        pass
+
+    def tear_down(self):
+        '''No tear down.'''
+        pass
+
+if __name__ == '__main__':
+    unittest.main()

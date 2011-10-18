@@ -1,0 +1,36 @@
+'''This class tests the cache class.'''
+
+__author__ = 'Stephen'
+__version__ = '1.0'
+
+from caches import caches
+import unittest,os, sqlite3
+
+
+class test_caches(unittest.TestCase):
+    def set_up(self):
+        '''Create an instance of the cache object.'''
+        self.my_caches = caches()
+        self.conn=sqlite3.connect('tmp.db')
+        self.c=self.conn.cursor()
+    def test_add_url(self):
+        '''This function tests the add_url function.'''
+        self.my_caches.add_url('Http://www.xkcd.com')
+
+        self.c.execute('''select count(*) from cache''')
+        for row in self.c:
+            count = row[0]
+        self.assertTrue(count==1)
+        
+    # def test_(self):
+    #     '''This function tests the .'''
+    #     pass
+
+    def tear_down(self):
+        '''No tear down.'''
+        self.conn.commit()
+        self.c.close()
+        caches.recreate_database()
+
+if __name__ == '__main__':
+    unittest.main()

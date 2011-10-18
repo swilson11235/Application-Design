@@ -1,0 +1,61 @@
+'''This class grabs a url file and caches it''' 
+
+__author__ = 'Stephen'
+__version__ = '1.0'
+
+
+import urllib2,sqlite3
+import os
+from time import localtime
+import time
+
+def recreate_database():
+    os.remove('cache.db')
+    conn = sqlite3.connect('cache.db')
+    c = conn.cursor()
+    conn.commit()
+    c.close()
+    
+class caches():
+    def __init__(self, url='', cache='cache.db'):
+        '''Initializes a new webpage's images.'''
+        self.URL=url
+        self.cache=cache
+        if not self.URL=='':
+            self.cache_urlopen()
+    def __del__(self):
+        os.remove(self.cache)
+    def add_url(self,url):
+        '''Adds the given url to the cache.'''
+        self.URL=url
+        self.cache_urlopen()
+    def cache_urlopen(self):
+        '''Is called by __init__ and add_url(url) to open and cache a url.''' 
+        url_file = urllib2.urlopen(self.URL)
+	url_text = url_file.read().decode('UTF-8')
+        conn = sqlite3.connect(self.cache)
+        c = conn.cursor()
+        c.execute('''create table if not exists {table_name} (html text,time TEXT)'''.format(table_name='cache'))
+        #gets number of items in table
+        c.execute('''select count(*) from cache''')
+        for row in c:
+            count = row[0]
+        # ensures that there are no more than 10 items in the table
+        if count > 9:
+            min_time = c.execute('''select MIN(time) from cache''')
+            for row in min_time:
+                min_t=row[0]
+            c.execute('''delete from cache where time="{time}"'''.format(time=min_t))
+        ctime=time.strftime("%y%m%d%H%M%s", localtime())
+        c.execute( '''insert into cache values (?, ?)''',(url_text,ctime))
+        conn.commit()
+        c.close()
+    def read_cache(self, command):
+        conn = sqlite3.connect(self.cache)
+        c = conn.cursor()
+        c.execute(command)
+        for row in c:
+            output=row[0]
+        conn.commit()
+        c.close()
+        return output
