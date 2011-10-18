@@ -12,7 +12,7 @@ class WaveImage:
     def fill_bkground(self):
         pass
 
-    def create_new_image(self):
+    def create_new_image(self, width, height):
         im = Image.new("RGB", (width, height))
         draw = ImageDraw.Draw(im)
         return im,draw
@@ -31,4 +31,3 @@ class WaveImage:
 
 if __name__=="__main__":
     import sys
-    

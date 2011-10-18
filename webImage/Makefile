@@ -5,7 +5,9 @@ MODULE = $(BASE)_pkg
 
 program:
 	export PYTHONPATH=$(PYTHONPATH):./$(MODULE)
-	python $(PROGRAM).py "http://www.bbc.co.uk"
+	python $(PROGRAM).py
+	mv images/montage.jpg .
+	rm -r images
 
 test:
 	export PYTHONPATH=$(PYTHONPATH):./$(MODULE)
