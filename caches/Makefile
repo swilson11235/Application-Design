@@ -19,5 +19,6 @@ doc:
 	mv $(MODULE).html documentation
 	mv $(MODULE).$(TEST).html documentation
 	mv $(MODULE).$(BASE).html documentation
+	mv $(MODULE).resetdatabase.html documentation
 	mv $(PROGRAM).html documentation
 

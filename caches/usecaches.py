@@ -8,8 +8,10 @@ import os
 
 def main():
     '''Executes commands from the caches class.'''
-    new_cache = caches('http://www.xkcd.com')
+    new_cache = caches('http://notreal.adscom')
     new_cache.add_url('http://www.nytimes.com')
+    print "Stats (misses,number in cache,replacements): ",
+    print new_cache.stats()
 
 if __name__=='__main__':
     main()
