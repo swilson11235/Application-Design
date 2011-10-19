@@ -7,7 +7,7 @@ __version__ = '1.0'
 import urllib2,sqlite3
 import os
 from time import localtime
-import time
+import datetime,time
 
 def recreate_database():
     os.remove('cache.db')
@@ -41,7 +41,7 @@ class caches():
             url_text = url_file.read().decode('UTF-8')
             conn = sqlite3.connect(self.cache)
             c = conn.cursor()
-            c.execute('''create table if not exists {table_name} (html text,time TEXT)'''.format(table_name='cache'))
+            c.execute('''create table if not exists {table_name} (url TEXT,html text,time TEXT)'''.format(table_name='cache'))
             #gets number of items in table
             c.execute('''select count(*) from cache''')
             for row in c:
@@ -53,8 +53,13 @@ class caches():
                 for row in min_time:
                     min_t=row[0]
                 c.execute('''delete from cache where time="{time}"'''.format(time=min_t))
-            ctime=time.strftime("%y%m%d%H%M%s", localtime())
-            c.execute( '''insert into cache values (?, ?)''',(url_text,ctime))
+            ctime=time.strftime("%y%m%d%H%M%S",localtime())
+            micro=datetime.datetime.now()
+            micro=micro.microsecond
+            ctime+=str(micro)
+            
+            print ctime
+            c.execute( '''insert into cache values (?, ?, ?)''',(self.URL, url_text,ctime))
             conn.commit()
             c.close()
         except:
